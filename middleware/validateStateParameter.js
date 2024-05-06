@@ -1,16 +1,14 @@
 const statesData = require('../model/states.json');
 
 const validateStateParameter = (req, res, next) => {
-    const stateCode = req.params.state;
+    const stateCode = req.params.state.toUpperCase();
+    const stateExists = statesData.some(state => state.code === stateCode);
 
-    const stateCodes = statesData.map(state => state.abbreviation);
-
-    if (stateCodes.includes(stateCode.toUpperCase())) {
-        req.body.stateCode = stateCode.toUpperCase(); 
-        next(); 
-    } else {
-        res.status(400).json({ error: 'Invalid state abbreviation code' });
+    if (!stateExists) {
+        return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
     }
+
+    next();
 };
 
 module.exports = validateStateParameter;
