@@ -35,7 +35,12 @@ const getAllStates = async (req, res) => {
 
 const getStatesAdmittedAfterYear = async (req, res) => {
     try {
-        const yearPrefix = req.params.year.substring(0, 4);
+        const year = parseInt(req.params.year);
+        if (isNaN(year)) {
+            return res.status(400).json({ message: "Invalid year entry, please input a valid year without month or day" });
+        }
+
+        const yearPrefix = year.toString();
 
         const states = statesData.filter(state => {
             const admissionYear = state.admission_date.substring(0, 4);
@@ -50,7 +55,12 @@ const getStatesAdmittedAfterYear = async (req, res) => {
 
 const getStatesAdmittedBeforeYear = async (req, res) => {
     try {
-        const yearPrefix = req.params.year.substring(0, 4);
+        const year = parseInt(req.params.year);
+        if (isNaN(year)) {
+            return res.status(400).json({ message: "Invalid year entry, please input a valid year without month or day" });
+        }
+
+        const yearPrefix = year.toString();
 
         const states = statesData.filter(state => {
             const admissionYear = state.admission_date.substring(0, 4);
@@ -59,7 +69,7 @@ const getStatesAdmittedBeforeYear = async (req, res) => {
 
         res.json(states);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
